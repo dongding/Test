@@ -1,0 +1,131 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="APPLICATION_INFO">
+    
+        <!-- insert a record into applications -->
+    	<insert id="insertapplicationinfo" parameterType="com.BiShe.bean.Application">
+		 INSERT INTO APPLICATIONS(DATA_ID,EMP_ID,EMP_NAME,APPROVER,
+		 CC,TRAINING_PROGRAM,TOTAL_COST,COMPANY_COVER,TRAINING_PERIOD_FROM,
+		 TRAINING_PERIOD_TO,SET_PERIOD,SERVICE_PERIOD_FROM,SERVICE_PERIOD_TO,REASON,CREATE_DATE,CREATE_BY,UPDATE_DATE,UPDATE_BY,STATUS)
+		 values(#{dataId},#{empId},#{empName},#{approver},#{cc},#{trainingProgram},#{totalCost},
+		 #{companyCover},#{trainingPeriodFrom},#{trainingPeriodTo},
+		 #{setPeriod},#{servicePeriodFrom},#{servicePeriodTo},#{reason},now(),#{empName},now(),#{empName},#{status})
+	   </insert>
+	   
+	   <!-- get max dataid from  applications  -->
+	   <select id="getmaxdataid" resultType="int">
+	     SELECT max(data_Id) from APPLICATIONS;
+	    </select>
+	    
+	    <!-- get an application record by  empId -->
+	    <select id="getapplicationbyempid" parameterType="String" resultMap="ApplicationMap">
+	      select * from APPLICATIONS where emp_Id=#{empId} and status not like '%_save' ORDER BY UPDATE_DATE
+	    </select>
+	    
+	    <!-- get an application record by dataId -->
+	    <select id="getapplicationbydataid" parameterType="Integer" resultMap="ApplicationMap">
+	      select * from APPLICATIONS where data_id=#{dataId} ORDER BY UPDATE_DATE
+	    </select>
+	    
+	    
+	     <!-- expot exel -->
+	     <select id="gettableapplication" parameterType="list" resultMap="ApplicationMap">
+	     	select * from APPLICATIONS  where DATA_ID
+	     	IN
+	     <foreach collection="list" item="information_id" open="(" close=")"
+			separator=",">
+			#{information_id}
+		  </foreach>
+		  
+	     </select>
+	    
+	    
+	    <!-- get an application-->
+	    <select id="getallapplication" resultMap="ApplicationMap">
+	      select * from APPLICATIONS ORDER BY UPDATE_DATE
+	    </select>
+	    
+	    <!-- get a list of applications whose status are unsubmit -->
+	    <select id="getallapplicationByStatus" resultMap="ApplicationMap">
+		    <![CDATA[
+		    select * from APPLICATIONS where status <> 'unsubmit' ORDER BY UPDATE_DATE
+	        ]]>
+	    </select>
+	    
+	    <!-- get a list of applications for approvers to approve -->
+	    <select id="getapplicationsforapprover" resultMap="ApplicationMap" parameterType="com.BiShe.bean.Employee">
+	    
+	        <![CDATA[
+	        select * from APPLICATIONS 
+            where (APPROVER = #{empName} and EMP_NAME <> #{empName} or APPROVER is null) and status in('submitted','approved','disapproved','resubmitted') ORDER BY UPDATE_DATE
+		    ]]>
+	    </select>
+	   	<select id="gettrainingprogrambyempname" parameterType="String" resultType="String">
+	   			select TRAINING_PROGRAM from APPLICATIONS where EMP_NAME = #{empName} and STATUS in ('submitted','resubmitted','approved')
+	   </select>
+	    
+	     <!-- update an application record by dataid -->
+	   <update id="updateapplicationinfobydataid" parameterType="com.BiShe.bean.Application" >
+	     update  APPLICATIONS set EMP_ID=#{empId},EMP_NAME=#{empName},APPROVER=#{approver},CC=#{cc},TRAINING_PROGRAM=#{trainingProgram},TOTAL_COST=#{totalCost},COMPANY_COVER=#{companyCover},TRAINING_PERIOD_FROM=#{trainingPeriodFrom},
+		 TRAINING_PERIOD_TO=#{trainingPeriodTo},SET_PERIOD=#{setPeriod},SERVICE_PERIOD_FROM=#{servicePeriodFrom},SERVICE_PERIOD_TO=#{servicePeriodTo},REASON=#{reason},UPDATE_DATE=now(),UPDATE_BY=#{updateBy},STATUS=#{status}
+		 where DATA_ID=#{dataId}
+	   </update>
+	   	    
+	    <!-- update status and update_date -->
+	   <update id="updatestatusandupdate_date" parameterType="com.BiShe.bean.Application" >
+	     update  APPLICATIONS set STATUS = #{status}, UPDATE_DATE = now() where DATA_ID  = #{dataId}
+	   </update>
+	   
+	   <!-- update reject notes status -->
+	   <update id="updaterejectnotes" parameterType="com.BiShe.bean.Application" >
+	     update  APPLICATIONS set REJECT_NOTES = #{rejectNotes},REJECTED = #{rejected} where DATA_ID  = #{dataId}
+	   </update>
+	   
+	   <!-- update comments status -->
+	   <update id="updatecomments" parameterType="com.BiShe.bean.Application" >
+	     update  APPLICATIONS set COMMENTS = #{comments},COMMENTED = #{commented} where DATA_ID  = #{dataId}
+	   </update>
+	   
+	 
+	   
+	   <delete id="deleteapplicationbydataid" parameterType="int">
+	     DELETE FROM APPLICATIONS WHERE DATA_ID=#{dataId}
+	   </delete>
+	   
+	  <resultMap id="ApplicationMap" type="com.BiShe.bean.Application">
+	       <result property="dataId" column="DATA_ID" javaType="java.lang.Integer" />
+		   <result property="empId" column="EMP_ID" javaType="java.lang.String"/>
+		   <result property="empName" column="EMP_NAME" javaType="java.lang.String"/>
+		   <result property="approver" column="APPROVER" javaType="java.lang.String" />
+		   <result property="cc" column="CC" javaType="java.lang.String"/>
+		   <result property="trainingProgram" column="TRAINING_PROGRAM" javaType="java.lang.String"/> 
+		   <result property="totalCost" column="TOTAL_COST" javaType="java.lang.String"/>
+		   <result property="companyCover" column="COMPANY_COVER" javaType="java.lang.String" /> 
+	       <result property="trainingPeriodFrom" column="TRAINING_PERIOD_FROM" javaType="java.lang.String"/> 
+	       <result property="trainingPeriodTo" column="TRAINING_PERIOD_TO" javaType="java.lang.String"/>
+	       <result property="setPeriod" column="SET_PERIOD" javaType="java.lang.String"/> 
+	       <result property="servicePeriodFrom" column="SERVICE_PERIOD_FROM" javaType="java.lang.String"/>
+	       <result property="servicePeriodTo" column="SERVICE_PERIOD_TO" javaType="java.lang.String"/> 
+	       <result property="reason" column="REASON" javaType="java.lang.String"/> 
+	       <result property="createDate" column="CREATE_DATE" javaType="java.lang.String"/>
+	       <result property="createBy" column="CREATE_BY" javaType="java.lang.String"/>
+	       <result property="updateDate" column="UPDATE_DATE" javaType="java.lang.String"/>
+	       <result property="updateBy" column="UPDATE_BY" javaType="java.lang.String"/>
+	       <result property="status" column="STATUS" javaType="java.lang.String"/>
+	       <result property="rejectNotes" column="REJECT_NOTES" javaType="java.lang.String"/>
+	       
+	       <result property="trainingInstitution" column="TRAINING_INSTITUTION" javaType="java.lang.String"/>
+	       <result property="companyCoverRate" column="COMPANY_COVER_RATE" javaType="java.lang.String"/>
+	        <result property="chineseName" column="CHINESE_NAME" />
+	        <result property="identification" column="IDENTIFICATION" />
+	        <result property="totalCostCn" column="TOTAL_COST_CN"  javaType="java.lang.String" />  
+	        <result property="companyCoverCn" column="COMPANY_COVER_CN"  javaType="java.lang.String" />  
+	        <result property="yearCn" column="YEAR_CN" javaType="java.lang.String"/>
+	        <result property="monthCn" column="MONTH_CN"  javaType="java.lang.String" />  
+	        <result property="dayCn" column="DAY_CN" javaType="java.lang.String" />
+	        <result property="rejected" column="REJECTED" javaType="java.lang.Integer"/>
+	        <result property="comments" column="COMMENTS" javaType="java.lang.String"/>
+	        <result property="commented" column="COMMENTED" javaType="java.lang.Integer"/>
+       </resultMap>
+	  </mapper>

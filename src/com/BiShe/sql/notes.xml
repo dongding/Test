@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="NOTES_INFO">
+    
+       <select id="getallhistorynotes" resultMap="NoteMap"  >
+	      select * from NOTES 
+	    </select>
+	    
+	    <insert id="insertNote" parameterType="com.BiShe.bean.Note">
+	      INSERT  INTO NOTES (DATA_ID,HISTORY_NOTE,CREATE_DATE) VALUES(#{dataId},#{historyNotes},curdate())
+	    </insert>
+	    
+	    <select id="gethistorynotesbydataid" resultMap="NoteMap" parameterType="int" >
+	      select * from NOTES where DATA_ID = #{dataId} order by NOTE_ID desc
+	    </select>
+        
+         <resultMap id="NoteMap" type="com.BiShe.bean.Note">
+	        <result property="noteId" column="NOTE_ID"  javaType="java.lang.Integer" /> 
+	        <result property="dataId" column="DATA_ID"  javaType="java.lang.Integer" />  
+	        <result property="historyNotes" column="HISTORY_NOTE" javaType="java.lang.String" />
+	        <result property="createDate" column="CREATE_DATE" javaType="java.lang.String"/>
+	        
+        </resultMap>
+        
+	  </mapper>

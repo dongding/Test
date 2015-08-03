@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <configuration>
+    
+      <!-- 10.2.1.134 -->
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+                    value="jdbc:mysql://localhost/hl" />
+                <property name="username" value="root" />
+                <property name="password" value="" /> 
+            </dataSource>
+        </environment>
+        <!--Later we should add more environment -->
+        <environment id="local">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+                <property name="url"
+                    value="jdbc:mysql://localhost/trainingagreement" />
+                <property name="username" value="root" />
+                <property name="password" value="root" />
+            </dataSource>
+        </environment>
+        </environments>
+     <mappers>
+     <mapper resource="com/BiShe/sql/employeeInfo.xml"/>  
+     <mapper resource="com/BiShe/sql/application.xml"/> 
+     <mapper resource="com/BiShe/sql/notes.xml"/> 
+     <mapper resource="com/BiShe/sql/comments.xml"/> 
+      <mapper resource="com/BiShe/sql/traffic.xml"/> 
+    </mappers>
+    
+    </configuration>

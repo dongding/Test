@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+    <struts>
+        
+         <constant name="struts.locale" value="en_US"></constant>
+        
+    	<package name="default" extends="struts-default" namespace="/">
+    		
+    	  <!-- login request -->
+    	   <action name="login" class="com.BiShe.action.LogigetalltrafficJsonAction" method="login">
+    			<result name="error">error.jsp</result>
+    			<result name="employeemain" >indexemployee.jsp</result>
+    			<result name="adminmain" >indexadmin.jsp</result>
+    			<result name="approvermain" >indexapprover.jsp</result>
+    		</action>
+    		
+    	
+    	    <!--  get all application by Json-->
+    		<action name="getallapplicationayJson" class="com.BiShe.action.EmployeeAction" method="getAllApplicationByJson"></action>
+    		<action name="getalltrafficJson" class="com.BiShe.action.EmployeeTrafficAction" method="getAllTrafficByJson"></action>
+    		
+    		
+    		<!-- get all training program -->
+    		<action name="getallprogrambyJson" class="com.BiShe.action.EmployeeAction" method="getAllProgramByJson"></action>
+    		
+			<!-- get all admin  -->
+    		<action name="getalladminbyJson" class="com.BiShe.action.EmployeeAction" method="getAllAdimByJson"></action>
+    		
+    		<!-- get all approvers  -->
+    		<action name="getallapproverbyJson" class="com.BiShe.action.EmployeeAction" method="getAllApproverByJson"></action>
+    		
+    		<!--  show all application-->
+    		<action name="showallapplication" class="com.BiShe.action.EmployeeAction" method="showAllApplication">
+    		  <result name="success">indexemployee.jsp</result>
+    		</action>
+    		
+    		<action name="showalltraffic" class="com.BiShe.action.EmployeeTrafficAction" method="showalltraffic">
+    		  <result name="success">indexemployeetra.jsp</result>
+    		</action>
+    		
+    		
+    		<!--  prepare to add application by an employee-->
+    		<action name="preparetoaddapplication" class="com.BiShe.action.EmployeeAction" method="prepareToAddApplication">
+    			<result name="success">indexemployeeAdd.jsp</result>
+    			<result name="prepare_approver_success">indexemployeeAdd_approver.jsp</result>
+    			<result name="error">error.jsp</result>
+    		</action>
+    		
+    		<action name="preparetoaddapplication1" class="com.BiShe.action.EmployeeAction" method="prepareToAddApplication">
+    			<result name="success">employeeTrafficeAdd.jsp</result>
+    			<result name="prepare_approver_success">indexemployeeAdd_approver.jsp</result>
+    			<result name="error">error.jsp</result>
+    		</action>
+    		
+    		
+    		<!--  prepare to add application by an approver
+    		<action name="prepareforapprovertoaddapplication" class="perficient.action.ApproverAction" method="prepareForApproverToAddApplication">
+    			<result name="prepare_approver_success">indexapprover.jsp</result>
+    			<result name="error">error.jsp</result>
+    		</action>
+    		-->
+    		
+    		<!-- add application by employee -->
+    		<action name="addapplicationbyemployee" class="com.BiShe.action.EmployeeAction" method="submitByEmployee">
+    			<result name="emp_insertSUCCESS">indexemployee.jsp</result>
+    			<result name="emp_updateSUCCESS">indexemployee.jsp</result>
+    			<result name="adminAsEmp_insertSUCCESS">indexadmin.jsp</result>
+    			<result name="approverAsEmp_insertSUCCESS">indexapprover.jsp</result>
+    			<result name="error">error.jsp</result>
+    		</action>
+    		
+    		<!-- save application by employee -->
+    		<action name="saveapplicationbyemployee" class="com.BiShe.action.EmployeeAction" method="saveByEmployee">
+    			<result name="emp_insertsaveSUCCESS">indexemployee.jsp</result>
+    			<result name="emp_updatesaveSUCCESS">indexemployee.jsp</result>
+    			<result name="adminAsEmp_insertsaveSUCCESS">indexadmin.jsp</result>
+    			<result name="approverAsEmp_insertsaveSUCCESS">indexapprover.jsp</result>
+    			<result name="error">error.jsp</result>
+    		</action>
+    		 
+    		<action name="addtrafficbyemployee" class="com.BiShe.action.EmployeeTrafficAction" method="submitTrafficByEmployee">
+    			<result name="traf_insertsaveSUCCESS">indexemployee.jsp</result>
+    			
+    		</action>
+    		<action name="saveTrafficbyemployee" class="com.BiShe.action.EmployeeTrafficAction" method="saveTrafficByEmployee">
+    			<result name="traf_insertsaveSUCCESS">indexemployee.jsp</result>
+    			
+    		</action>
+    		
+    		<action name="showdetail" class="com.BiShe.action.EmployeeAction" method="showDetail">
+    			<result name="unsubmit" type="chain">preparetoaddapplication</result>
+    			<result name="submit">viewEmployee.jsp</result>
+    			<result name="admin_unsubmit" type="chain">adminAction_preparetoaddapplication</result>
+    		</action>
+    		<action name="getApplicationById" class="com.BiShe.action.EmployeeAction" method="getApplicationById">
+    		</action>
+    	
+    	<action name="adminAction_*" class="com.BiShe.action.AdminAction" method="{1}">
+    		<result name="prepareSUCCESS">indexAdminAdd.jsp</result>
+    		<result name="admin_insertsaveSUCCESS">indexadmin.jsp</result>
+    		<result name="admin_updatesaveSUCCESS">indexadmin.jsp</result>
+    		<result name="unsubmit" type="chain">adminAction_preparetoaddapplication</result>
+    		<result name="submit">viewAdmin.jsp</result>
+    		<result name="error">error.jsp</result>
+    	</action>
+    	
+    	<action name="showIdAction_*" class="com.BiShe.action.ShowIdAction" method="{1}">
+    	</action>
+    	
+    		<!-- export  -->
+    	<action name="export" class="com.BiShe.action.ExportInformationAction"> 
+    	 <result>adminMain.jsp</result>
+		 <result name="error">error.jsp</result>
+    	</action>
+    	
+    	<!--  get applications by Json in order to approved by approver-->
+    		<action name="getapplicationforapproverbyJson" class="com.BiShe.action.ApproverAction" method="getAllApplicationForApproverByJson"></action>
+    	
+    	<action name="approvedbyapprover" class="com.BiShe.action.ApproverAction" method="approve">
+    	    <result name="approved">indexapprover.jsp</result>
+    	     <result name="approved_fail">indexapprover.jsp</result>
+    	</action>
+    	<action name="disapprovedbyapprover" class="com.BiShe.action.ApproverAction" method="disapprove">
+    	</action>
+       <action name="gethistorynotesbydataid" class="com.BiShe.action.ApproverAction" method="getHistoryNotesByDataId"></action>
+       
+      
+    	<action name="deleteapplicationbydataid" class="com.BiShe.action.EmployeeAction" method="deleteApplicationByDataId">
+    			<result name="delete_success">employeeMain.jsp</result>
+    			<result name="delete_error">error.jsp</result>
+    		</action>
+    		<action name="showoneagreementbydataid" class="com.BiShe.action.EmployeeAction" method="showOneAgreementByDataId">
+    		</action>
+    		
+    		
+    		<action name="approveraddcomments" class="com.BiShe.action.ApproverAction" method="addComment">
+    	</action>
+    	  <action name="getcommentsbydataid" class="com.BiShe.action.ApproverAction" method="getHistoryCommentsByDataId"></action>
+
+<action name="adminaddcomments" class="com.BiShe.action.ApproverAction" method="addComment">
+    	</action>
+		<action name="checkprogramrepeat" class="com.BiShe.action.EmployeeAction" method="checkProgramRepeat"></action>
+    	</package>
+	
+    </struts>

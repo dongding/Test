@@ -1,0 +1,39 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="TRAFFIC_INFO">
+    
+    <insert id="inserttrafficinfo" parameterType="com.BiShe.bean.Traffic">
+    	INSERT INTO traffic(EMP_ID,EMP_NAME,APPROVER,CC,ITEM_NAME,FROM_PLACE,TO_PLACE,
+    	TOTAL_COST,COMPANY_COVER,ITEM_DATE,STATUS)values(#{empId},#{empName},#{approver},#{cc},#{itemname},#{fromplace},
+		 #{toplace},#{totalCost},#{companyCover}, #{itemdate},#{status})  
+	    
+    </insert>
+      <select id="gettrafficbydataid" resultType="int">
+	     SELECT max(data_Id) from traffic;
+	    </select>
+	  <update id="updatetrafficinfobydataid" parameterType="com.BiShe.bean.Traffic" >
+	     update  APPLICATIONS set EMP_ID=#{empId},EMP_NAME=#{empName},APPROVER=#{approver},CC=#{cc},ITEM_NAME=#{itemname},FROM_PLACE=#{fromplace},
+	     TO_PLACE=#{toplace},TOTAL_COST=#{totalCost},COMPANY_COVER=#{companyCover},STATUS=#{status}
+		 where DATA_ID=#{dataId}
+	   </update>
+	   
+	    <select id="gettrafficbyempid" parameterType="String" resultMap="TrafficMap">
+	      select * from traffic where emp_Id=#{empId} and status not like '%_save' 
+	    </select>
+       
+        <resultMap id="TrafficMap" type="com.BiShe.bean.Traffic">
+         <result property="dataId" column="DATA_ID" javaType="java.lang.Integer" />
+		   <result property="empId" column="EMP_ID" javaType="java.lang.String"/>
+		   <result property="empName" column="EMP_NAME" javaType="java.lang.String"/>
+		   <result property="approver" column="APPROVER" javaType="java.lang.String" />
+		   <result property="cc" column="CC" javaType="java.lang.String"/>
+		   <result property="itemname" column="ITEM_NAME" javaType="java.lang.String"/> 
+		   <result property="totalCost" column="TOTAL_COST" javaType="java.lang.String"/>
+		   <result property="companyCover" column="COMPANY_COVER" javaType="java.lang.String" /> 
+		   <result property="itemdate" column="ITEM_DATE" javaType="java.lang.String"/>
+	      
+	       <result property="status" column="STATUS" javaType="java.lang.String"/>
+        </resultMap>
+	 
+   </mapper>

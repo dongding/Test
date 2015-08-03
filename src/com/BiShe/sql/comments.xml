@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="COMMENTS_INFO">
+    
+       <select id="getallhistorycomments" resultMap="CommentMap"  >
+	      select * from COMMENTS 
+	    </select>
+	    
+	    <insert id="insertComment" parameterType="com.BiShe.bean.Comment">
+	      INSERT  INTO COMMENTS (DATA_ID,HISTORY_COMMENT,CREATE_DATE,CREATE_BY) VALUES(#{dataId},#{historyComments},curdate(),#{createBy})
+	    </insert>
+	    
+	    <select id="gethistorycommentsbydataid" resultMap="CommentMap" parameterType="int" >
+	      select * from COMMENTS where DATA_ID = #{dataId} order by COMMENT_ID desc
+	    </select>
+        
+         <resultMap id="CommentMap" type="com.BiShe.bean.Comment">
+	        <result property="commentId" column="COMMENT_ID"  javaType="java.lang.Integer" /> 
+	        <result property="dataId" column="DATA_ID"  javaType="java.lang.Integer" />  
+	        <result property="historyComments" column="HISTORY_COMMENT" javaType="java.lang.String" />
+	        <result property="createDate" column="CREATE_DATE" javaType="java.lang.String"/>
+	        <result property="createBy" column="CREATE_BY" javaType="java.lang.String"/>
+	        
+        </resultMap>
+        
+	  </mapper>

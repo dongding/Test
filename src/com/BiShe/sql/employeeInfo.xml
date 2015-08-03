@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="EMPLOYEE_INFO">
+    	
+    	 <select id="showidsql" parameterType="String" resultType="String">
+	      select DISTINCT EMP_ID from EMPLOYEE where EMP_NAME=#{selectedname}
+	    </select>
+	    
+	      <select id="shownamesql" parameterType="String" resultType="String">
+	      select DISTINCT EMP_NAME from EMPLOYEE where EMP_ID=#{selectedid}
+	    </select>
+    	<!-- get all approvers from employee -->
+	   <select id="getallapprovers" resultMap="EmployeeMap"  >
+	      select * from EMPLOYEE where authority = 'approver'
+	    </select>
+	    
+	    <!-- get all admin from employee -->
+	    <select id="getalladmins" resultMap="EmployeeMap"  >
+	      select * from EMPLOYEE where authority = 'admin'
+	    </select>
+	    
+	    <!-- get an employee record by empName -->
+	    <select id="getemployeebyempname" resultMap="EmployeeMap"  parameterType="String">
+	      select * from EMPLOYEE where EMP_NAME = #{empName}
+	    </select>
+	    
+	    <!-- get all employee records -->
+	    <select id="getallemployee" resultMap="EmployeeMap"  >
+	      select * from EMPLOYEE 
+	    </select>
+	    
+	     <select id="getallProgram" resultMap="ProgramMap"  >
+	      select * from Program
+	    </select>
+	    
+	    
+	    
+	 
+	    <!-- get approvers for approver -->
+	    
+	   <select id="getapproversforapprover" resultMap="EmployeeMap" parameterType="String">
+	        <![CDATA[
+		     select * from EMPLOYEE where authority = 'approver' and emp_Name <> #{empName}  
+	        ]]>
+	   </select>
+	   <select id="getadminsforadmin" resultMap="EmployeeMap" parameterType="String">
+	        <![CDATA[
+		     select * from EMPLOYEE where authority = 'admin' and emp_Name <> #{empName}  
+	        ]]>
+	   </select>
+	    
+	    <resultMap id="EmployeeMap" type="com.BiShe.bean.Employee">
+	        <result property="empId" column="EMP_ID" /> 
+	        <result property="empName" column="emp_Name" />  
+	        <result property="email" column="email" />
+	        <result property="authority" column="authority" />
+        </resultMap>
+       
+       
+		<resultMap id="ProgramMap" type="com.BiShe.bean.ProgramInfo">
+		        <result property="TpId" column="TP_ID" /> 
+		        <result property="programName" column="TP_Name" />  
+		</resultMap>
+    
+    </mapper>
